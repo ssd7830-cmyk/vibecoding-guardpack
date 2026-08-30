@@ -22,8 +22,8 @@ HELPER = Path("docs/release-helper.md")
 START_GUIDE = Path("docs/시작하기.txt")
 START_GUIDE_NAME = "시작하기.txt"
 FIXED_TIME = (2026, 8, 25, 0, 0, 0)
-SKIP_PARTS = {"__pycache__", ".pytest_cache"}
-SKIP_NAMES = {".DS_Store"}
+SKIP_PARTS = {"__pycache__", ".pytest_cache", ".git"}
+SKIP_NAMES = {".DS_Store", ".gitignore", "LICENSE"}
 
 
 def safe_output(path: Path) -> None:

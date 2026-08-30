@@ -108,7 +108,8 @@ class VerifyGuardpackTests(unittest.TestCase):
             if path.is_file()
             and "__pycache__" not in path.parts
             and ".pytest_cache" not in path.parts
-            and path.name != ".DS_Store"
+            and ".git" not in path.parts
+            and path.name not in {".DS_Store", ".gitignore", "LICENSE"}
             and path.suffix != ".pyc"
         }
         self.assertEqual(set(verifier.REQUIRED), actual)
