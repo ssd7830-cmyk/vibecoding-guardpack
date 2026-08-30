@@ -53,6 +53,7 @@ REQUIRED = [
     "build_guardpack_zip.py",
     "behavior_harness.py",
     "hook_logger.py",
+    "docs/INSTALL.md",
     "docs/QUICKSTART.md",
     "docs/EVALUATION.md",
     "docs/MAINTAINERS.md",
