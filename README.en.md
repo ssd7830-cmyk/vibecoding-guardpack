@@ -1,5 +1,36 @@
 # Vibecoding Guardpack v2.3.7
 
+## Why this exists — self-conditioning collapses the answer space
+
+An LLM feeds its own just-written tokens back in as input for the next one. Because of this
+self-conditioning, **the direction it commits to early gets reinforced as it goes.** Write
+"this is a caching problem" in the first paragraph, and the rest of the reasoning tends to
+justify that premise rather than test it. Attention being *able* to see the whole context is
+not the same as actually looking widely across it.
+
+The result is a single answer that reads fluent and confident. The problem is that it is
+often **not one candidate chosen over others, but the first slip carried all the way to the
+end.** Repeated patching, misdiagnosis stuck at one function, plausible prose standing in for
+evidence, "it's done" when it isn't — these come from that structure, not from laziness.
+
+**This pack is not about constraining Claude to make it less creative. It is the opposite.**
+It interrupts the collapse toward one branch: separate observation from interpretation, keep
+more than one candidate alive, and decide between them with evidence. It pushes *back* against
+narrowing.
+
+| What self-conditioning does | How the guardpack reverses it |
+|---|---|
+| Keeps justifying the first hypothesis | Separates observation, interpretation, speculation; allows `unknown` |
+| Vision stuck at a single function | Widens to the **relevant system boundary** that separates cause from propagation |
+| Plausible prose substitutes for proof | Requires execution evidence per claim, and states unverified scope |
+| Patches in the same direction repeatedly | Halts auto-repair when no new discriminating information appeared |
+| Fills in facts from memory | Requires current official sources for facts that change |
+
+The same conclusion repeated by several agents is still one piece of evidence. Consensus count
+is not evidence — that principle runs through the whole pack.
+
+---
+
 Behavioral guidelines and verification playbooks for Claude Code — reducing over-editing,
 local-scope misdiagnosis, false completion claims, repeated patching, evidence laundering,
 and risky external actions.
