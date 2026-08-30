@@ -35,6 +35,7 @@ EXPECTED_IMPORT = f"@guardpack/versions/{VERSION}/00-글로벌-코어.md"
 REQUIRED = [
     ".claude-plugin/marketplace.json",
     ".claude-plugin/plugin.json",
+    "README.en.md",
     "README.md",
     "00-글로벌-코어.md",
     "01-비가역-가드.md",
