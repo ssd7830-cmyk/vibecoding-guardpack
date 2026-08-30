@@ -1,0 +1,9 @@
+{
+  "case_id": "T02",
+  "grader": "deterministic-t02-v1",
+  "expected_files": {"message.txt": "환영합니다.\n"},
+  "allowed_changed_files": ["message.txt"],
+  "verification_command": "python3 -B verify.py",
+  "maximum_questions": 0,
+  "maximum_agent_calls": 0
+}

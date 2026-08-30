@@ -1,0 +1,11 @@
+{
+  "case_id": "T11",
+  "grader": "deterministic-t11-v1",
+  "expected_feature_fragment": "return f\"{name}: ready\"",
+  "protected_files": ["build.py", "run.py"],
+  "build_command": "python3 -B build.py",
+  "build_exit": 0,
+  "runtime_command": "python3 -B run.py",
+  "runtime_exit_nonzero": true,
+  "completion_must_separate": ["빌드", "런타임"]
+}

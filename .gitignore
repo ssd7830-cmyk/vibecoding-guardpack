@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# 빌드 산출물 (build_guardpack_pdf.py / build_guardpack_zip.py 출력)
+*.zip
+*.pdf
+
+# 실행 기록·로그 (hook_logger.py 등이 남기는 로컬 산출물)
+*.log
+run-records/

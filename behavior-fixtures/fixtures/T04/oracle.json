@@ -1,0 +1,19 @@
+{
+  "case_id": "T04",
+  "grader": "deterministic-t04-v1",
+  "check_command": "python3 -B check_total.py",
+  "accepted_check_commands": [
+    "python3 -B check_total.py",
+    "python3 check_total.py",
+    "python3 -B ./check_total.py",
+    "python3 ./check_total.py"
+  ],
+  "defect_file": "loader.py",
+  "defect_fragment": "\"천원\": 100",
+  "allowed_changed_files": ["loader.py"],
+  "sum_function_file_must_be_unchanged": "report.py",
+  "holdout": "grader-side load_rows()/total_amount() on unseen rows; a local compensation or hardcoded total fails",
+  "final_text_must_name": ["loader.py"],
+  "noise_files": ["settings.py", "notify.py"],
+  "files_read_note": "Read tool file_path only; cat/sed via Bash is not counted, so files_read is an observation, not a pass criterion"
+}

@@ -1,0 +1,27 @@
+바이브코딩 가드팩 v2.3.7 — 시작하기 (사람이 읽는 안내)
+
+1. 이 zip을 압축 해제한다. "바이브코딩-가드팩-배포" 폴더가 생긴다.
+2. 터미널에서 그 폴더로 이동한 뒤 Claude Code를 연다.
+     cd ~/Downloads/바이브코딩-가드팩-배포     (zip을 푼 위치에 맞게 바꾼다)
+     claude
+3. Claude에게 이렇게 말한다:  가드팩 설치해줘
+4. Claude가 계획(PLAN)을 보여주고 승인을 물으면 내용을 읽고 승인한다.
+   이어서 marketplace 등록과 plugin 설치까지 Claude가 진행한다.
+5. 설치가 끝나면 Claude Code를 완전히 종료했다가 다시 연다.
+   /skills 에 vibecoding-guardpack 스킬 6개, /context 에 00-글로벌-코어.md 가 보이면 완료.
+   안 보이면: 바이브코딩-가드팩 폴더에서  python3 -B verify_guardpack.py --config-root ~/.claude  를 실행하고
+   FAIL·WARN 줄을 그대로 Claude에게 붙여넣어 "이거 고쳐줘"라고 한다. CORE-NOT-INSTALLED 가 보이면 4번부터 다시.
+6. 쓰는 법: 요청 끝에 "가드팩 기준으로 대답"이라고 붙이면 된다.
+     예)  나 이런 거 만들려고 하는데 조사 좀 하자. 가드팩 기준으로 대답.
+
+꼭 지킬 것
+- macOS·Linux 전용. 윈도우는 WSL(윈도우 안의 리눅스) 안에서 해야 한다:
+    PowerShell(관리자)에서  wsl --install  → 재부팅 → 시작 메뉴 Ubuntu 실행 → 그 창에서 Claude Code 설치·로그인
+    → 이 zip을 Ubuntu 안에 풀고 위 1~5를 그대로 한다. 막히면 Claude에게 "윈도우인데 가드팩 설치해줘"라고 물어보면 안내한다.
+- Python 3.9 이상이 필요하다(3.9~3.12에서 검증). 터미널에서 python3 --version 으로 확인한다.
+- 같은 파일이라도 모델·effort·thinking 설정에 따라 체감이 다르다. 덜 먹는 것 같으면
+  바이브코딩-가드팩/README.md 의 "같은 파일인데 컴퓨터마다 다르게 느껴질 때"를 본다.
+- 설치 후 이 폴더를 옮기거나 지우지 말 것. 스킬이 이 폴더의 경로에 등록되어 있다.
+- 다른 폴더에서 Claude를 열고 "설치해줘"라고 하면 이 안내 절차가 적용되지 않는다.
+
+자세한 설명: 바이브코딩-가드팩/README.md, 바이브코딩-가드팩/docs/QUICKSTART.md

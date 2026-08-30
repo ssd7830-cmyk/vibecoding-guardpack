@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="ko-KR" data-overflow-pages="pending">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>바이브코딩 안전·검증 실전 매뉴얼</title>
+  <style>
+    @page { size: A4; margin: 0; }
+    :root {
+      --ink: #172033;
+      --muted: #586174;
+      --paper: #fbfaf6;
+      --white: #ffffff;
+      --line: #d8dce3;
+      --navy: #172846;
+      --blue: #1d4ed8;
+      --blue-soft: #eff6ff;
+      --green: #166534;
+      --green-soft: #f0fdf4;
+      --amber: #92400e;
+      --amber-soft: #fffbeb;
+      --red: #991b1b;
+      --red-soft: #fef2f2;
+      --violet: #5b4ab1;
+      --violet-soft: #f3f1ff;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #dfe2e6; }
+    body {
+      color: var(--ink);
+      font-family: "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      font-size: 10.9pt;
+      line-height: 1.56;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page {
+      width: 210mm;
+      height: 297mm;
+      margin: 9mm auto;
+      padding: 13mm 18mm 10mm;
+      background: var(--paper);
+      box-shadow: 0 2px 18px rgba(23, 32, 51, .13);
+      overflow: hidden;
+      break-after: page;
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .page:last-child { break-after: auto; page-break-after: auto; }
+    .page-body { flex: 1 1 auto; min-height: 0; }
+    .page-head, .page-foot {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 7.8pt;
+    }
+    .page-head { border-bottom: 1px solid var(--line); padding-bottom: 2.7mm; margin-bottom: 5mm; }
+    .page-foot { border-top: 1px solid var(--line); padding-top: 2.5mm; margin-top: 4mm; }
+    .quick-nav a { color: var(--muted); text-decoration: none; margin-right: 2.2mm; }
+    .quick-nav a::after { content: " ·"; margin-left: 2.2mm; color: #a0a6b2; }
+    .quick-nav a:last-child::after { content: ""; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: 31pt; line-height: 1.12; letter-spacing: -.055em; margin-bottom: 5mm; }
+    h2 { font-size: 22pt; line-height: 1.23; letter-spacing: -.045em; margin: 0 0 4mm; }
+    h3 { font-size: 14pt; line-height: 1.35; letter-spacing: -.025em; margin: 0 0 2mm; }
+    p { margin-bottom: 3mm; }
+    ul, ol { margin: 1.5mm 0 2.5mm; padding-left: 5.5mm; }
+    li { margin-bottom: 1.2mm; }
+    a { color: var(--blue); text-decoration: underline; text-underline-offset: 1.2px; }
+    code, .mono { font-family: "SFMono-Regular", Menlo, Consolas, monospace; font-size: .92em; }
+    .eyebrow {
+      color: var(--green);
+      font-size: 8.4pt;
+      font-weight: 800;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      margin-bottom: 2.5mm;
+    }
+    .lead { font-size: 13pt; line-height: 1.55; color: #354056; }
+    .small { font-size: 9.1pt; line-height: 1.48; color: var(--muted); }
+    .micro { font-size: 7.8pt; line-height: 1.42; color: var(--muted); }
+    .label { font-size: 8.3pt; line-height: 1.3; font-weight: 800; color: var(--muted); margin: 2.5mm 0 1mm; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5mm; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5mm; }
+    .stack { display: grid; gap: 3mm; }
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 3mm;
+      padding: 3.6mm 4mm;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .card.blue { background: var(--blue-soft); border-color: #b9cdf9; }
+    .card.green { background: var(--green-soft); border-color: #b8dec3; }
+    .card.amber { background: var(--amber-soft); border-color: #ead29d; }
+    .card.red { background: var(--red-soft); border-color: #edbcbc; }
+    .card.violet { background: var(--violet-soft); border-color: #d3cdf8; }
+    .card.dark { background: var(--navy); color: #f7f9fc; border-color: var(--navy); }
+    .callout {
+      border-left: 4px solid var(--blue);
+      background: var(--blue-soft);
+      border-radius: 0 2.5mm 2.5mm 0;
+      padding: 3.2mm 4mm;
+      margin: 3mm 0;
+      break-inside: avoid;
+    }
+    .callout.good { border-color: var(--green); background: var(--green-soft); }
+    .callout.warn { border-color: var(--amber); background: var(--amber-soft); }
+    .callout.stop { border-color: var(--red); background: var(--red-soft); }
+    .tag {
+      display: inline-block;
+      border-radius: 99px;
+      padding: .8mm 2.2mm;
+      color: #fff;
+      background: var(--blue);
+      font-size: 7.5pt;
+      line-height: 1.3;
+      font-weight: 800;
+      margin-right: 1.5mm;
+      vertical-align: .2mm;
+    }
+    .tag.good { background: var(--green); }
+    .tag.warn { background: var(--amber); }
+    .tag.stop { background: var(--red); }
+    .prompt {
+      background: var(--navy);
+      color: #f7f9fc;
+      border-radius: 2.7mm;
+      padding: 3.6mm 4mm;
+      margin: 1mm 0 3mm;
+      font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 10pt;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .prompt.light { background: #f2f4f7; color: var(--ink); border: 1px solid var(--line); }
+    .step {
+      display: grid;
+      grid-template-columns: 10mm 1fr;
+      gap: 3mm;
+      align-items: start;
+      margin-bottom: 3.2mm;
+    }
+    .step-n {
+      width: 9mm; height: 9mm;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      color: white; background: var(--blue);
+      font-size: 9pt; line-height: 1; font-weight: 900;
+    }
+    .flow { display: grid; gap: 2mm; margin: 3mm 0; }
+    .flow.four { grid-template-columns: repeat(4, 1fr); }
+    .flow.five { grid-template-columns: repeat(5, 1fr); }
+    .flow.seven { grid-template-columns: repeat(7, 1fr); }
+    .node {
+      min-height: 20mm;
+      background: white;
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--blue);
+      border-radius: 2.3mm;
+      padding: 2.4mm;
+      text-align: center;
+      font-size: 8.2pt;
+      line-height: 1.4;
+      color: var(--ink);
+      break-inside: avoid;
+    }
+    .node.good { border-top-color: var(--green); }
+    .node.warn { border-top-color: var(--amber); }
+    .node.stop { border-top-color: var(--red); }
+    table { width: 100%; border-collapse: collapse; margin: 2.5mm 0; font-size: 9pt; line-height: 1.42; }
+    th, td { border: 1px solid var(--line); padding: 2.2mm 2.5mm; vertical-align: top; text-align: left; }
+    th { background: #e9edf3; color: #253149; font-weight: 800; }
+    tr:nth-child(even) td { background: rgba(255,255,255,.62); }
+    .toc { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm; margin: 3mm 0 4mm; }
+    .toc a {
+      min-height: 16.5mm;
+      display: grid;
+      grid-template-columns: 10mm 1fr 7mm;
+      align-items: center;
+      gap: 2mm;
+      color: var(--ink);
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 2.7mm;
+      padding: 2.5mm 3mm;
+      text-decoration: none;
+      font-size: 9.1pt;
+    }
+    .toc-n { color: var(--blue); font-weight: 900; font-size: 12pt; }
+    .toc-p { color: var(--muted); text-align: right; font-weight: 800; }
+    .cover { background: linear-gradient(150deg, #f7f3e9 0%, #fbfaf6 55%, #eaf5ef 100%); }
+    .cover-band { width: 45mm; height: 4mm; border-radius: 99px; background: linear-gradient(90deg, var(--green), #4da787); margin-bottom: 15mm; }
+    .promise-loop { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5mm; margin: 8mm 0 6mm; }
+    .promise-loop .node { min-height: 25mm; padding-top: 4mm; }
+    .credibility { margin-top: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5mm; }
+    .stat { background: rgba(255,255,255,.86); border: 1px solid #cbded5; border-radius: 2.8mm; padding: 3mm; }
+    .stat b { display: block; color: var(--green); font-size: 11pt; margin-bottom: .7mm; }
+    .divider { height: 1px; background: var(--line); margin: 3.5mm 0; }
+    .check { list-style: none; padding-left: 0; }
+    .check li { position: relative; padding-left: 6mm; }
+    .check li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 900; }
+    .stop-list { list-style: none; padding-left: 0; }
+    .stop-list li { position: relative; padding-left: 6mm; }
+    .stop-list li::before { content: "×"; position: absolute; left: 0; color: var(--red); font-weight: 900; }
+    .source { font-size: 8pt; line-height: 1.4; }
+    .source li { margin-bottom: 1.2mm; }
+    .appendix-cover, .docfile { page: appendix; background: #ffffff; }
+    .appendix-cover {
+      break-before: page;
+      page-break-before: always;
+      min-height: 250mm;
+      padding-top: 18mm;
+    }
+    .appendix-cover h2 { font-size: 27pt; margin-bottom: 8mm; }
+    .appendix-cover .scope-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4mm;
+      margin: 6mm 0;
+    }
+    .docfile {
+      break-before: page;
+      page-break-before: always;
+      color: #20283a;
+    }
+    .docfile h3 {
+      border-bottom: 2px solid var(--navy);
+      padding-bottom: 3mm;
+      margin-bottom: 5mm;
+      font-size: 15pt;
+    }
+    .mdfile {
+      margin: 0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 8pt;
+      line-height: 1.45;
+    }
+    @page appendix { size: A4; margin: 16mm 15mm 17mm; background: #ffffff; }
+    @media print {
+      html, body { background: #ffffff; }
+      .page { margin: 0; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+<section class="page cover" id="p1">
+  <div class="page-body" style="display:flex; flex-direction:column;">
+    <div class="cover-band"></div>
+    <div class="eyebrow">Claude Code · Guardpack v2.3.7</div>
+    <h1>바이브코딩<br>안전·검증 실전 매뉴얼</h1>
+    <p class="lead">기초 강의를 막 마친 비개발자용<br><b>작업을 통제하고 증거로 확인하는 법</b></p>
+
+    <div class="promise-loop">
+      <div class="node"><b>1 요청</b><br>결과와 경계</div>
+      <div class="node"><b>2 승인</b><br>범위와 위험</div>
+      <div class="node good"><b>3 검증</b><br>주장별 증거</div>
+      <div class="node good"><b>4 기록</b><br>결정과 규칙</div>
+    </div>
+
+    <div class="card dark">
+      이 문서는 모든 기능을 설명하는 종합 교과서가 아닙니다. 막혔을 때 현재 증상을 찾아,
+      <b>지금 할 한 가지·그대로 복사할 문장·완료 증거·멈출 조건</b>을 바로 꺼내 쓰는 현장 매뉴얼입니다.
+    </div>
+
+    <div class="credibility">
+      <div class="stat"><b>근거 설계</b><span class="small">공식 문서와 독립 연구 대조</span></div>
+      <div class="stat"><b>상호비판</b><span class="small">복수 AI 검토는 관점 점검</span></div>
+      <div class="stat"><b>행동 규격</b><span class="small">T01~T30 평가 계약</span></div>
+      <div class="stat"><b>구조 검사</b><span class="small">배포 도구와 파일 계약</span></div>
+    </div>
+    <p class="micro" style="margin-top:3mm;">행동 평가 규격과 실행 도구는 실제 모델 효과의 증거가 아닙니다. 채점된 반복 실행 기록이 생기기 전까지 행동 개선은 미검증이며, 정확한 범위는 15쪽에 적었습니다.</p>
+  </div>
+  <div class="page-foot"><span>수강생 배포용 · 2026.08.25</span><span>1 / 앞 15</span></div>
+</section>
+
+<section class="page" id="p11">
+  <div class="page-head"><span>ACTION 08 · AI 판단 검증</span><span>확신과 확실성을 분리</span></div>
+  <div class="page-body">
+    <div class="eyebrow">Trust evidence, not tone</div>
+    <h2>말투가 단정적이어도, 근거는 따로 확인하세요</h2>
+    <div class="callout"><span class="tag">이런 상황인가요?</span>중요한 선택인데 AI의 설명이 너무 그럴듯해 반박하기 어렵거나, 여러 AI가 같은 답을 했으니 사실이라고 믿고 싶어집니다.</div>
+
+    <div class="label">지금 할 일 · 답의 상태와 출처를 분리</div>
+    <div class="prompt">이 답을 ① 직접 확인된 사실 ② 근거에 따른 추론 ③ 미확인으로 나눠.
+사실에는 내가 직접 열 수 있는 원출처·문서 날짜·실행 결과를 붙이고, 그 출처가 실제로 어떤 주장까지 지지하는지 설명해.
+미확인은 어떻게 확인할지 또는 왜 지금 확인할 수 없는지 적어.</div>
+
+    <div class="label">중립적으로 다시 묻기</div>
+    <div class="prompt light">내 선호 결론은 숨길게. [상황·예산·위험·복구 조건]에서 선택지를 평가할 기준을 먼저 세우고 비교해.
+반대안을 억지로 만들지 말고, 문제나 실질적 대안이 없으면 없다고 보고해.</div>
+
+    <div class="flow four">
+      <div class="node"><b>단정적 말투</b><br>증거 아님</div>
+      <div class="node"><b>문서명·링크</b><br>주장 연결 확인</div>
+      <div class="node warn"><b>실행·측정</b><br>관찰 범위의 증거</div>
+      <div class="node good"><b>독립 검토</b><br>새 출처·전문성일 때</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card green"><h3><span class="tag good">완료 확인</span>독립 검토가 값진 때</h3><ul class="check"><li>결과를 직접 실행해 판별하기 어려움</li><li>오판 영향이 크고 해석이 필요함</li><li>새 출처·검사·전문성이 추가됨</li></ul></div>
+      <div class="card red"><h3><span class="tag stop">여기서 멈춤</span>합의 착시</h3><ul class="stop-list"><li>같은 원출처를 여러 AI가 되풀이</li><li>반대 이유를 채우려고 허구 결함 생성</li><li>링크 존재만 보고 주장 적합성 미확인</li></ul></div>
+    </div>
+    <p class="small"><b>왜 필요한가:</b> 같은 세션에서도 직접 실행·측정한 결과는 유효한 증거입니다. 독립 세션은 그 증거로 판별하기 어려운 고영향 해석을 재검토할 때 쓰며, AI 수가 곧 독립 증거 수는 아닙니다.</p>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>11 / 앞 15</span></div>
+</section>
+
+<section class="page" id="p12">
+  <div class="page-head"><span>ACTION 09 · 설치·법·돈</span><span>외부 원출처와 승인 게이트</span></div>
+  <div class="page-body">
+    <div class="eyebrow">High-impact external work</div>
+    <h2>외부 세계를 바꾸는 일은 한 단계 더 확인하세요</h2>
+    <div class="callout"><span class="tag">이런 상황인가요?</span>처음 보는 패키지 설치, 한국 법·세금·요금 확인, 메일·결제·배포처럼 실행 뒤 되돌리기 어려운 작업입니다.</div>
+
+    <div class="label">처음 보는 패키지 · 설치 전</div>
+    <div class="prompt">아직 설치하지 마.
+정확한 패키지명, 공식 저장소, 게시자·관리자, 공식 프로젝트 주소, 배포·유지 이력, 설치 스크립트, 보안 경고를 원출처에서 확인해.
+manifest·lockfile·실행 권한이 어떻게 바뀌는지와 더 표준적인 대안까지 보고해.</div>
+
+    <div class="label">한국 법·결제·배송·세금·요금</div>
+    <div class="prompt light">기억으로 확정하지 말고 오늘 날짜 기준 관할 기관·서비스의 공식 문서를 직접 열어 확인해.
+문서 날짜, 적용 대상, 예외, 실제 결론을 연결해서 보여주고 확인되지 않으면 확인 불가라고 표시해.</div>
+
+    <div class="flow four">
+      <div class="node"><b>대상</b><br>누구·무엇에</div>
+      <div class="node"><b>변경</b><br>파일·권한·외부 상태</div>
+      <div class="node warn"><b>비용·위험</b><br>발송·결제·공개</div>
+      <div class="node stop"><b>승인·복구</b><br>실행 전 확인</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card green"><h3><span class="tag good">완료 확인</span>승인 가능한 보고</h3><ul class="check"><li>정확한 대상과 예상 변경</li><li>현재 날짜의 원출처와 적용 범위</li><li>비용·부작용·복구 또는 취소법</li><li>사용자가 승인할 마지막 지점</li></ul></div>
+      <div class="card red"><h3><span class="tag stop">여기서 멈춤</span>근거가 부족할 때</h3><ul class="stop-list"><li>게시자·공식 주소가 불일치</li><li>공식 문서가 오래됐거나 적용 대상 불명</li><li>복구 불가 행동을 묵시적 승인으로 실행</li></ul></div>
+    </div>
+    <p class="small"><b>왜 필요한가:</b> 다운로드 수는 인기도 신호일 뿐 안전성·적합성·게시자 진위를 증명하지 않습니다. “영어로 생각해”도 일반 해결책이 아닙니다. 중요한 것은 해당 주제의 최신 원문과 실제 적용 범위입니다.</p>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>12 / 앞 15</span></div>
+</section>
+
+<section class="page" id="p13">
+  <div class="page-head"><span style="color:var(--red); font-weight:800;">EMERGENCY · 사고 대응</span><span>한 장 캡처용</span></div>
+  <div class="page-body">
+    <div class="eyebrow" style="color:var(--red);">Stop first</div>
+    <h2>추가 수리를 시키지 말고, 먼저 진행 중인 작업과 변경 범위를 멈춰 확인하세요</h2>
+
+    <div class="flow five">
+      <div class="node stop"><b>1 멈춤</b><br>대화·프로세스 구분</div>
+      <div class="node stop"><b>2 현황</b><br>파일·외부 동작</div>
+      <div class="node warn"><b>3 손실</b><br>복구 전 미리보기</div>
+      <div class="node"><b>4 복구</b><br>정확한 범위만</div>
+      <div class="node good"><b>5 재검증</b><br>사고 전 조건으로</div>
+    </div>
+
+    <div class="label">그대로 복사 · 아직 원복하지 않기</div>
+    <div class="prompt">아직 더 고치거나 원복하지 마.
+현재 바뀐 파일과 diff, 진행 중인 프로세스, 이미 실행된 외부 동작(DB·메일·결제·배포·API), 보존할 내 기존 변경을 먼저 보여줘.
+복구 후보마다 정확한 대상과 사라질 항목, Git으로 돌아오지 않는 상태, 확인 방법을 보고해.
+내가 범위를 승인하면 그 부분만 복구하고 사고 전 완료 조건으로 다시 검증해.</div>
+
+    <div class="grid-2">
+      <div class="card amber"><h3><span class="tag warn">구분</span>무엇을 멈췄는가</h3><p><b>Esc</b>는 현재 Claude 동작을 멈추는 수단입니다. 이미 실행된 배포·결제·발송을 자동 취소하지 않으며, 별도 프로세스가 계속 도는지도 확인해야 합니다.</p></div>
+      <div class="card red"><h3><span class="tag stop">금지</span>손실 미리보기 없는 일괄 복구</h3><p><span class="mono">git reset --hard</span>, 전체 checkout·clean, 디렉터리 삭제 같은 파괴 명령을 대상 확인 없이 복사하지 않습니다.</p></div>
+    </div>
+
+    <div class="card green"><h3><span class="tag good">복구 완료 확인</span></h3><ul class="check"><li>복구 대상만 되돌아왔고 사용자 변경은 남아 있음</li><li>DB·메일·결제·배포·외부 API 결과를 별도로 확인함</li><li>사고 전과 같은 입력·환경·완료 조건으로 재검증함</li><li>원인과 방지책을 현재 기록과 안정된 규칙에 분리함</li></ul></div>
+    <p class="small"><b>핵심:</b> Git은 추적해 커밋한 파일의 이력입니다. 외부 세계와 모든 로컬 상태를 되돌리는 만능 복구 버튼이 아닙니다.</p>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>13 / 앞 15</span></div>
+</section>
+
+<section class="page" id="p14">
+  <div class="page-head"><span>UNDERSTAND · 7개 병목 지도</span><span>16개 증상을 중복 없이 묶기</span></div>
+  <div class="page-body">
+    <div class="eyebrow">Why the patterns repeat</div>
+    <h2>증상을 외우지 말고, 다음 확인 행동을 고르세요</h2>
+    <p>기존 합본의 16개 병목은 사례 색인으로 유용하지만 서로 겹칩니다. 아래 지도는 같은 해결법을 반복하지 않고, 보이는 신호를 다음 행동 카드로 연결합니다.</p>
+
+    <table style="font-size:8.25pt; line-height:1.36;">
+      <tr><th style="width:36mm;">원리</th><th>보이는 증상 · 작동 방식</th><th style="width:26mm;">대응</th></tr>
+      <tr><td><b>1 명세 공백과 성급한 가정</b></td><td>모호한 요청을 한 해석으로 빨리 고정하고 구현</td><td><a href="#p4">p4 요청</a></td></tr>
+      <tr><td><b>2 초기 답에 고착</b></td><td>첫 가설·설명·패치가 다음 판단의 기준이 되어 반복</td><td><a href="#p7">p7 진단</a> · <a href="#p8">p8 인계</a></td></tr>
+      <tr><td><b>3 행동 압력과 범위 확장</b></td><td>완성·수정 압력이 불확실성 보고보다 앞서며 옆 코드까지 변경</td><td><a href="#p4">p4 범위</a> · <a href="#p7">p7 수정</a></td></tr>
+      <tr><td><b>4 약한 증거와 확신 착시</b></td><td>빌드·말투·설명이 실제 목표 달성처럼 보임</td><td><a href="#p6">p6 완료</a> · <a href="#p11">p11 판단</a></td></tr>
+      <tr><td><b>5 문맥 손실과 상태 충돌</b></td><td>긴 대화·요약·오래된 결정·영구 규칙이 서로 다른 현재를 만듦</td><td><a href="#p9">p9 결정</a> · <a href="#p10">p10 규칙</a></td></tr>
+      <tr><td><b>6 비가역 결과와 권한 위험</b></td><td>파일 변경과 외부 행동의 손실 비용이 같은 출력처럼 처리됨</td><td><a href="#p5">p5 상태</a> · <a href="#p13">p13 사고</a></td></tr>
+      <tr><td><b>7 외부 출처·의존성 불확실성</b></td><td>패키지·법·요금·한국 정보의 최신성·게시자·적용 범위가 불명</td><td><a href="#p12">p12 외부</a></td></tr>
+    </table>
+
+    <div class="card dark">
+      <h3>작업 상태의 공통 뼈대</h3>
+      <div class="flow five" style="margin-bottom:0;">
+        <div class="node"><b>목표</b><br>관찰 결과</div>
+        <div class="node"><b>관찰</b><br>입력·출력</div>
+        <div class="node"><b>가설</b><br>미확인 허용</div>
+        <div class="node warn"><b>판별</b><br>결론 바꾸는 검사</div>
+        <div class="node good"><b>변경·검증</b><br>최소 범위와 증거</div>
+      </div>
+    </div>
+
+    <div class="callout warn"><b>이 지도는 원인을 단정하는 진단표가 아닙니다.</b> 모델 구조만이 아니라 사용자 요구, 코드, 환경, 도구, 데이터도 원인일 수 있습니다. 새 세션도 모든 병목의 공통 치료제가 아니라 오염된 가정과 현재 증거를 분리하는 수단 중 하나입니다.</div>
+    <p class="small">병목 이름을 외울 필요는 없습니다. `무엇이 관찰됐는가 → 어떤 결과가 후보를 가르는가 → 무엇을 어디까지 바꿀 것인가 → 어떤 증거로 끝낼 것인가`를 설명할 수 있으면 됩니다.</p>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>14 / 앞 15</span></div>
+</section>
+
+<section class="page" id="p15">
+  <div class="page-head"><span>CHECK · 회상과 검증 범위</span><span>다음 페이지부터 원본 부록</span></div>
+  <div class="page-body">
+    <div class="eyebrow">Recall before rereading</div>
+    <h2>PDF를 가리고, 첫 행동을 자기 말로 답해보세요</h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>상황형 회상 5문항</h3>
+        <ol class="small">
+          <li>모호한 새 기능을 부탁하려 할 때 첫 행동은?</li>
+          <li>AI가 완료라고 했을 때 무엇을 증거로 볼까?</li>
+          <li>같은 오류가 반복되고 새 증거 없이 변경만 늘면?</li>
+          <li>처음 보는 패키지를 설치하기 전에 확인할 것은?</li>
+          <li>파일 손상과 외부 상태 변경이 함께 의심되면?</li>
+        </ol>
+      </div>
+      <div class="card green">
+        <h3>답의 방향</h3>
+        <ol class="small">
+          <li>아는 조건·미정 결정·완료·허용 범위 분리</li>
+          <li>목표와 같은 범위의 실행 결과</li>
+          <li>수리 중단, 증거 정리, 이번 변경만 분리</li>
+          <li>공식 출처·게시자·스크립트·변경·경고</li>
+          <li>멈춤→현황→손실→범위 복구→재검증</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <h3>이 자료가 실제로 확인한 범위</h3>
+    <div class="grid-4">
+      <div class="stat"><b>근거 설계</b><span class="micro">공식 문서와 독립 연구를 대조해 원리와 반례를 검토</span></div>
+      <div class="stat"><b>상호비판</b><span class="micro">복수 AI의 관점 점검이며 독립 실험이나 사람 동료평가가 아님</span></div>
+      <div class="stat"><b>행동 평가</b><span class="micro">T01~T30 규격·7개 pilot fixture·실행기는 있으나 채점된 실제 반복 결과는 아직 없음</span></div>
+      <div class="stat"><b>구조 회귀</b><span class="micro">파일·참조·설치·롤백·PDF·기록 계약의 결정론적 검사</span></div>
+    </div>
+
+    <div class="callout warn"><b>정확한 한계</b> — 구조 회귀 검사는 검사한 코드 경로와 파일 계약만 확인합니다. 여러 AI의 상호비판은 관점을 넓힌 절차이지 독립 행동 증거가 아닙니다. 채점된 실제 모델 비교가 끝나기 전에는 가드팩의 행동 개선률을 말할 수 없고, “사람에게 최적”이라는 판단도 초급 수강생의 탐색 시간·첫 행동 정확도·중단 조건 누락·회상률을 따로 측정해야 합니다.</div>
+
+    <div class="grid-2">
+      <div>
+        <h3>편집 설계의 대표 근거</h3>
+        <ul class="source">
+          <li><a href="https://doi.org/10.1016/j.edurev.2017.11.001">신호화 메타분석</a></li>
+          <li><a href="https://doi.org/10.1007/s10648-018-9435-9">공간적 근접성 메타분석</a></li>
+          <li><a href="https://research.ibm.com/publications/the-minimal-manual">IBM Minimal Manual</a></li>
+          <li><a href="https://doi.org/10.3102/0034654316689306">회상 연습 메타분석</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>접근성과 제품 범위</h3>
+        <ul class="source">
+          <li><a href="https://www.w3.org/TR/WCAG22/">WCAG 2.2</a></li>
+          <li><a href="https://code.claude.com/docs/en/memory">Claude Code memory</a></li>
+          <li><a href="https://code.claude.com/docs/en/sandboxing">Claude Code sandboxing</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card dark"><b>16쪽부터는 가드팩 원문 부록입니다.</b> 당장 정독하지 않아도 됩니다. 문제가 생겼을 때 앞 15쪽으로 행동을 고르고, 더 깊은 파일 구조와 설치 원문이 필요할 때 부록을 여세요. 실제 설치에는 PDF가 아니라 함께 배포된 같은 버전의 가드팩 폴더가 필요합니다.</div>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>15 / 앞 15</span></div>
+</section>
+
+<script>
+  const pageSortMarker = document.currentScript;
+  function sortPages() {
+    [...document.querySelectorAll('section.page')]
+      .sort((left, right) => Number(left.id.slice(1)) - Number(right.id.slice(1)))
+      .forEach((page) => document.body.insertBefore(page, pageSortMarker));
+  }
+  function checkOverflow() {
+    const bad = [...document.querySelectorAll('.page')]
+      .filter((page) => page.scrollHeight > page.clientHeight + 2)
+      .map((page) => page.id || '?');
+    document.documentElement.setAttribute('data-overflow-pages', bad.length ? bad.join(',') : 'none');
+  }
+  window.addEventListener('load', () => {
+    sortPages();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => requestAnimationFrame(checkOverflow));
+    } else {
+      requestAnimationFrame(checkOverflow);
+    }
+  });
+</script>
+
+<section class="page" id="p6">
+  <div class="page-head"><span>ACTION 03 · 완료 검증</span><span>보고보다 강한 증거</span></div>
+  <div class="page-body">
+    <div class="eyebrow">Claim → evidence</div>
+    <h2>“다 됐습니다”를 주장별 실행 증거로 바꾸세요</h2>
+    <div class="callout"><span class="tag">이런 상황인가요?</span>AI는 완료했다고 하지만 직접 눌러보지 않았거나, 빌드 성공 하나로 화면·API·설정까지 전부 검증됐다고 말합니다.</div>
+
+    <div class="label">지금 할 일 · 성공 결과를 먼저 계약하고 같은 범위로 검증</div>
+    <div class="prompt">완료 조건은 [사용자가 실제로 볼 결과]야.
+완료라고 말하기 전에 직접 실행해 확인하고, 주장마다 그 주장을 지지하는 증거를 붙여.
+바뀐 결과, 실행한 검사, 실제로 남은 미검증·우회·차단만 보고해.
+기존 테스트를 통과용으로 약화·skip·하드코딩했다면 완료가 아니야.</div>
+
+    <table>
+      <tr><th>완료 주장</th><th>맞는 증거</th><th>단독으로 부족한 것</th></tr>
+      <tr><td>버그가 고쳐짐</td><td>원 실패 입력 통과 + 관련 회귀</td><td>빌드 성공</td></tr>
+      <tr><td>UI가 맞음</td><td>실제 화면·상호작용·필요시 접근성</td><td>소스 diff</td></tr>
+      <tr><td>API 연동 완료</td><td>요청·응답·오류 경로·권한·버전</td><td>타입 검사</td></tr>
+      <tr><td>안전장치가 막음</td><td>격리 fixture의 실제 차단 결과</td><td>MD의 금지 문장</td></tr>
+    </table>
+
+    <div class="grid-2">
+      <div class="card green"><h3><span class="tag good">완료 확인</span>보고에 남아야 할 것</h3><ul class="check"><li>사용자가 볼 결과</li><li>주장별 실행 증거</li><li>실제로 존재하는 미검증·우회·차단</li><li>테스트 변경과 이유</li></ul></div>
+      <div class="card red"><h3><span class="tag stop">여기서 멈춤</span>채점표를 고쳤을 때</h3><ul class="stop-list"><li>기대값 약화·skip·무조건 성공</li><li>특정 입력만 통과하는 하드코딩</li><li>화면을 못 봤는데 확인했다고 보고</li></ul></div>
+    </div>
+    <p class="small"><b>직접 확인:</b> 정상 입력만 보지 말고 과업에 맞춰 빈칸·긴 값·한글·특수문자·오류 경로도 확인합니다.</p>
+    <p class="small"><b>왜 필요한가:</b> 증거의 강도는 완료 주장과 같은 범위여야 합니다. 환경상 직접 못 본 것은 실패가 아니라 `미검증`으로 정확히 남기는 것이 정직한 완료 보고입니다.</p>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>6 / 앞 15</span></div>
+</section>
+
+<section class="page" id="p7">
+  <div class="page-head"><span>ACTION 04 · 진단 후 수정</span><span>증상과 원인을 분리</span></div>
+  <div class="page-body">
+    <div class="eyebrow">Observe before fixing</div>
+    <h2>오류가 보인 곳보다, 처음 어긋난 경계를 찾으세요</h2>
+    <div class="callout"><span class="tag">이런 상황인가요?</span>“안 되는데 고쳐줘”라고 한 뒤 여러 파일이 바뀌었지만 원인은 설명되지 않았고, 같은 오류가 남아 있습니다.</div>
+
+    <div class="label">지금 할 일 · 원인이 불명확하면 판별 검사까지만</div>
+    <div class="prompt">지금 [문제]가 발생해. 아직 고치지 말고 재현 결과, 확인된 사실, 원인 후보, 후보를 가르는 가장 작은 저위험 검사만 보고해.
+코드·데이터·상태·캐시·설정·환경·버전·시간·외부 I/O 중 결론을 바꾸는 경계까지 보고, 모르면 미확인이라고 해.</div>
+
+    <div class="flow five">
+      <div class="node"><b>관찰</b><br>기대와 실제</div>
+      <div class="node"><b>경계</b><br>최초 divergence</div>
+      <div class="node"><b>가설</b><br>다른 예측</div>
+      <div class="node warn"><b>판별</b><br>작고 저위험한 probe</div>
+      <div class="node good"><b>수정·검증</b><br>최소 유관 범위</div>
+    </div>
+
+    <div class="label">원인이 지지된 뒤</div>
+    <div class="prompt">확인된 원인과 직접 연결된 최소 유관 범위만 고쳐.
+예상 변경 파일과 검증법을 먼저 알려주고, 다른 문제는 바꾸지 말고 보고만 해.</div>
+
+    <div class="grid-2">
+      <div class="card green"><h3><span class="tag good">완료 확인</span>좋은 진단</h3><ul class="check"><li>사실과 가설이 구분됨</li><li>후보마다 다른 관찰을 예측함</li><li>검사가 다음 행동을 실제로 바꿈</li><li>수정과 원인의 연결이 보임</li></ul></div>
+      <div class="card red"><h3><span class="tag stop">여기서 멈춤</span>범위가 퍼질 때</h3><ul class="stop-list"><li>판별 없이 패치부터 겹침</li><li>저장소 전체를 무차별 탐색함</li><li>다음 경계가 결론을 바꾸지 않음</li></ul></div>
+    </div>
+    <p class="small"><b>왜 필요한가:</b> 넓게 본다는 뜻은 모든 것을 읽는 것이 아니라 원인과 전파를 가르는 유관한 edge만 확장하는 것입니다. 오타처럼 원인과 수정이 직접 보이는 저위험 작업에는 긴 진단 의식을 강제하지 않습니다.</p>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>7 / 앞 15</span></div>
+</section>
+
+<section class="page" id="p8">
+  <div class="page-head"><span>ACTION 05 · 실패 루프 탈출</span><span>횟수보다 새 정보</span></div>
+  <div class="page-body">
+    <div class="eyebrow">Stop the patch loop</div>
+    <h2>같은 오류가 반복되면, 패치가 아니라 증거를 정리하세요</h2>
+    <div class="callout"><span class="tag">이런 상황인가요?</span>수정할 때마다 오류는 같고 변경 파일은 늘어나며, 무엇을 시도했는지조차 대화 속에서 섞이기 시작합니다.</div>
+
+    <div class="label">지금 할 일 · 중단 신호 확인</div>
+    <div class="prompt">자동 수리를 멈춰.
+각 시도의 입력·명령·diff·출력·결과, 새로 생긴 증거, 지지·약화·배제된 가설을 정리해.
+새 판별 정보가 없거나 패치가 겹쳤다면 내 기존 변경을 보존하고 이번 시도분만 원복할 계획을 먼저 보여줘.</div>
+
+    <div class="grid-3">
+      <div class="card red"><h3>같은 오류 반복</h3><p class="small">검사 결과가 그대로인데 코드만 바뀜</p></div>
+      <div class="card red"><h3>새 증거 없음</h3><p class="small">다음 시도의 결과가 판단을 바꾸지 않음</p></div>
+      <div class="card red"><h3>변경 범위 증가</h3><p class="small">원인과 무관한 파일까지 패치가 확산</p></div>
+    </div>
+
+    <div class="label">새 세션 인계 패킷</div>
+    <div class="prompt light">목표·제약 / 환경·버전 / 현재 diff / 재현 입력과 실제 출력
+수행한 검사와 결과 / 실패한 시도 / 지지·약화·배제·미확인 가설
+보존할 사용자 변경 / 다음 최소 판별 검사 / 비밀은 가림</div>
+    <p class="micro"><span class="mono">/clear</span>는 대화 문맥을 비울 뿐, 파일·프로세스·DB·배포 상태를 되돌리지 않습니다.</p>
+
+    <div class="grid-2">
+      <div class="card green"><h3><span class="tag good">완료 확인</span>새 출발의 조건</h3><ul class="check"><li>실패 이력은 증거로 보존</li><li>검증되지 않은 해석은 가설로 표시</li><li>겹친 패치가 분리·원복됨</li></ul></div>
+      <div class="card red"><h3><span class="tag stop">여기서 멈춤</span>더 해도 정보가 없을 때</h3><ul class="stop-list"><li>새 출처·검사·전문성이 없음</li><li>남은 행동이 고위험·권한 밖</li><li>어떤 결과도 다음 행동을 안 바꿈</li></ul></div>
+    </div>
+    <p class="small"><b>왜 필요한가:</b> `두 번이면 무조건 리셋`은 너무 둔한 규칙입니다. 두 번 실패해도 새 인과 증거가 생겼다면 가치가 있고, 한 번뿐이어도 판별 없이 광범위한 패치가 쌓이면 바로 멈춰야 합니다.</p>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>8 / 앞 15</span></div>
+</section>
+
+<section class="page" id="p9">
+  <div class="page-head"><span>ACTION 06 · 긴 대화 관리</span><span>대화가 아니라 결정 상태를 인계</span></div>
+  <div class="page-body">
+    <div class="eyebrow">Keep decisions alive</div>
+    <h2>대화가 길어질수록, 최신 결정은 파일에 남기세요</h2>
+    <div class="callout"><span class="tag">이런 상황인가요?</span>분명 합의한 포트·화면·제외 범위를 AI가 다시 묻거나, “아니 그게 아니라”가 반복됩니다.</div>
+
+    <div class="label">지금 할 일 · 결정과 미결정을 분리해 갱신</div>
+    <div class="prompt">지금까지의 최신 상태를 정리해.
+확정된 목표·제약·결정, 근거, 폐기된 결정, 미결정, 현재 작업, 다음 검증을 구분하고 출처가 되는 파일·로그 위치를 붙여.
+내가 확인하면 프로젝트의 결정 기록 파일에 중복 없이 갱신해.</div>
+
+    <table>
+      <tr><th>상태</th><th>예시</th><th>날짜·이유·대체 관계</th></tr>
+      <tr><td>현재</td><td>개발 포트 5433, 결제 제외</td><td>결정일과 근거를 함께 유지</td></tr>
+      <tr><td>대체됨</td><td>초기 결제 포함안</td><td>새 결정을 가리키고 이력은 보존</td></tr>
+      <tr><td>미결정</td><td>회원 등급 수</td><td>결과를 바꾸는 시점에 질문</td></tr>
+      <tr><td>현재 작업</td><td>로그인 401 재현</td><td>최신 검사·diff와 연결</td></tr>
+    </table>
+
+    <div class="grid-2">
+      <div class="card green"><h3><span class="tag good">완료 확인</span>새 세션으로 가도 되는 때</h3><ul class="check"><li>확정·폐기·미결정이 구분됨</li><li>현재 diff와 검증 결과가 있음</li><li>원문 로그 대신 접근 가능한 증거 위치가 있음</li></ul></div>
+      <div class="card red"><h3><span class="tag stop">여기서 멈춤</span>대화 복구가 비싼 때</h3><ul class="stop-list"><li>같은 정정이 반복됨</li><li>이전 가정 위에 패치가 겹침</li><li>요약에서 구체값·예외가 빠짐</li></ul></div>
+    </div>
+    <p class="small"><b>왜 필요한가:</b> 긴 대화의 요약은 유용하지만 손실될 수 있습니다. 모든 실패 기록을 버리는 것이 아니라, 검증된 사실과 검사 결과는 남기고 추측을 사실로 세탁하지 않는 것이 핵심입니다.</p>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>9 / 앞 15</span></div>
+</section>
+
+<section class="page" id="p10">
+  <div class="page-head"><span>ACTION 07 · 규칙 오염 방지</span><span>기억과 계약을 구분</span></div>
+  <div class="page-body">
+    <div class="eyebrow">Put knowledge in the right place</div>
+    <h2>반복됐다는 이유만으로 글로벌 규칙에 넣지 마세요</h2>
+    <div class="callout"><span class="tag">이런 상황인가요?</span>같은 피드백을 또 했지만, 일시적인 취향인지 모든 프로젝트에 적용할 안정된 규칙인지 확신이 없습니다.</div>
+
+    <div class="label">지금 할 일 · 기록 위치와 적용 범위를 먼저 결정</div>
+    <div class="prompt">이 내용을 바로 글로벌 CLAUDE.md에 추가하지 마.
+사실·현재 결정·안정된 프로젝트 규칙·복잡한 절차 중 무엇인지 분류하고, 적용 대상·예외·기존 규칙 충돌·검증 방법을 보여줘.
+가장 좁은 적절한 위치와 예상 diff를 제안한 뒤 내 승인을 받아.</div>
+
+    <div class="grid-4">
+      <div class="card"><h3>글로벌 코어</h3><p class="small">프로젝트를 넘어 반복되는 최소 원칙</p></div>
+      <div class="card blue"><h3>프로젝트 CLAUDE.md</h3><p class="small">안정된 프로젝트 사실·규칙</p></div>
+      <div class="card amber"><h3>상황별 플레이북</h3><p class="small">필요할 때 직접 호출하는 절차</p></div>
+      <div class="card green"><h3>결정 로그</h3><p class="small">현재 선택과 대체 이력</p></div>
+    </div>
+    <p class="micro">코드·설정·공식 문서·테스트로 확인되는 사실은 가능한 한 그 원본 가까이에 둡니다.</p>
+
+    <div class="grid-2">
+      <div class="card green"><h3><span class="tag good">완료 확인</span>승격 게이트</h3><ul class="check"><li>반복 가능하고 오래 유지됨</li><li>대상과 예외가 구체적임</li><li>상위·기존 규칙과 충돌하지 않음</li><li>행동이나 테스트로 확인 가능</li></ul></div>
+      <div class="card red"><h3><span class="tag stop">여기서 멈춤</span>글로벌 오염 신호</h3><ul class="stop-list"><li>한 번의 임시 취향을 영구화</li><li>모든 상황에 `항상·무조건` 적용</li><li>01~09 전부를 매 세션 상시 주입</li></ul></div>
+    </div>
+
+    <div class="callout warn"><b>기억은 계약이 아닙니다.</b> auto memory나 대화 기억은 편의를 위한 신호일 수 있지만, 중요한 규칙의 단일 원본과 적용 범위를 대신하지 않습니다.</div>
+    <p class="small"><b>왜 필요한가:</b> 긴 글로벌 MD는 컨텍스트 비용뿐 아니라 규칙 충돌과 범위 오염을 만듭니다. 이 가드팩은 짧은 00만 자동 import하고, plugin이 01~08 정본을 상황별로 읽으며, 09는 평가 규격으로 분리합니다.</p>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>10 / 앞 15</span></div>
+</section>
+
+
+<section class="page" id="p2">
+  <div class="page-head"><span>START · 3분 시작</span><span>PDF만으로는 설치할 수 없습니다</span></div>
+  <div class="page-body">
+    <div class="eyebrow">Start safely</div>
+    <h2>설치 성공이 아니라, 실제 로드까지 확인하세요</h2>
+    <p>동봉된 <span class="mono">바이브코딩-가드팩</span> 폴더가 단일 원본입니다. 현재 설치기는 macOS/POSIX + Python 3에서 검증됐으며, Windows native 설치는 이 문서가 검증하지 않았습니다.</p>
+
+    <div class="step"><div class="step-n">1</div><div><h3>먼저 PLAN만 실행</h3><div class="prompt light">python3 -B install_guardpack.py</div><p class="small">아무 파일도 쓰지 않은 상태에서 설정 루트, 충돌, 예상 변경, 백업 위치와 <span class="mono">NEXT_APPLY</span>를 확인합니다.</p></div></div>
+    <div class="step"><div class="step-n">2</div><div><h3>BLOCK이 없고 경로가 맞을 때만 적용</h3><div class="prompt light">PLAN이 출력한 NEXT_APPLY 명령을 글자 그대로 실행</div><p class="small">BLOCK이면 중단합니다. 기존 파일을 지우거나 덮어서 통과시키지 않습니다.</p></div></div>
+    <div class="step"><div class="step-n">3</div><div><h3>새 로컬 Claude Code 세션에서 실제 로드 확인</h3><div class="prompt light">/context</div><p class="small"><span class="mono">Memory files</span>에 <span class="mono">guardpack/versions/2.3.7/00-글로벌-코어.md</span>가 보이는지 확인합니다. <span class="mono">/memory</span> 목록만으로 실제 로드를 증명하지 않습니다. 안 보이면 <span class="mono">python3 -B verify_guardpack.py --config-root &lt;설정루트&gt;</span>의 FAIL·WARN 줄을 Claude에게 붙여넣습니다.</p></div></div>
+    <div class="step"><div class="step-n">4</div><div><h3>라우팅 plugin은 별도 설치·확인</h3><p class="small"><span class="mono">docs/QUICKSTART.md</span>의 marketplace 등록과 plugin 설치를 따르고, 새 세션 <span class="mono">/skills</span>에서 namespace를, <span class="mono">/context</span>의 Skills 행에서 description이 잘리지 않았는지 확인합니다. 코어 설치만으로 스킬이 등록되지는 않습니다.</p></div></div>
+
+    <div class="grid-2">
+      <div class="card green"><h3>매 세션 자동</h3><b>00 글로벌 코어 하나</b><p class="small">모든 작업에 필요한 짧은 행동 게이트</p></div>
+      <div class="card amber"><h3>상황별</h3><b>문구 트리거 1 + 자동 라우터 4 + 수동 감사 1</b><p class="small">요청 끝에 “가드팩 기준으로 대답”이라고 쓰면 맞는 라우터가 켜집니다. 01~08 정본은 필요할 때만 읽습니다.</p></div>
+    </div>
+    <div class="callout stop"><span class="tag stop">중단</span>설치기가 permissions·sandbox·hooks·모델 설정까지 바꿨다고 가정하지 마세요. MD가 로드됐다는 사실만으로 안전 설정 완료라고 하지 않습니다.</div>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>2 / 앞 15</span></div>
+</section>
+
+<section class="page" id="p3">
+  <div class="page-head"><span>NAVIGATION · 상황 찾기</span><span>증상에서 바로 들어가세요</span></div>
+  <div class="page-body">
+    <div class="eyebrow">Find, act, verify</div>
+    <h2>처음부터 읽지 말고, 지금 겪는 일부터 찾으세요</h2>
+    <p><b>지금 손상이 진행 중이면 다른 설명을 읽지 말고 <a href="#p13">13쪽 사고 대응</a>으로 가세요.</b> 그 밖의 상황은 아래 항목을 누르면 해당 행동 카드로 이동합니다.</p>
+
+    <div class="toc">
+      <a href="#p4"><span class="toc-n">01</span><span><b>뭘 정해야 할지 막막해요</b><br><span class="small">요구·질문·완료 조건</span></span><span class="toc-p">4</span></a>
+      <a href="#p5"><span class="toc-n">02</span><span><b>원본과 내 변경을 지키고 싶어요</b><br><span class="small">Git·체크포인트·외부 상태</span></span><span class="toc-p">5</span></a>
+      <a href="#p6"><span class="toc-n">03</span><span><b>“다 됐다”를 믿어도 될까요?</b><br><span class="small">주장별 실행 증거</span></span><span class="toc-p">6</span></a>
+      <a href="#p7"><span class="toc-n">04</span><span><b>버그 원인이 불명확해요</b><br><span class="small">진단·판별·최소 수정</span></span><span class="toc-p">7</span></a>
+      <a href="#p8"><span class="toc-n">05</span><span><b>같은 수리를 계속 실패해요</b><br><span class="small">중단 신호·새 세션 인계</span></span><span class="toc-p">8</span></a>
+      <a href="#p9"><span class="toc-n">06</span><span><b>대화가 길어져 결정이 사라져요</b><br><span class="small">결정 기록·세션 교체</span></span><span class="toc-p">9</span></a>
+      <a href="#p10"><span class="toc-n">07</span><span><b>규칙을 어디에 기록할까요?</b><br><span class="small">CLAUDE.md 오염 방지</span></span><span class="toc-p">10</span></a>
+      <a href="#p11"><span class="toc-n">08</span><span><b>AI의 확신을 믿어도 될까요?</b><br><span class="small">사실·추측·독립 검토</span></span><span class="toc-p">11</span></a>
+      <a href="#p12"><span class="toc-n">09</span><span><b>설치·법·돈이 걸렸어요</b><br><span class="small">외부 원출처·승인 게이트</span></span><span class="toc-p">12</span></a>
+      <a href="#p13"><span class="toc-n" style="color:var(--red);">SOS</span><span><b>사고가 났어요</b><br><span class="small">멈춤·손실 확인·복구</span></span><span class="toc-p">13</span></a>
+    </div>
+
+    <div class="grid-3">
+      <div class="card blue"><span class="tag">바로 진행</span><p class="small">명백하고 저위험이며 검증이 쉬운 최소 변경</p></div>
+      <div class="card amber"><span class="tag warn">먼저 확인</span><p class="small">인과가 불명확하거나 결과·비용·복구가 크게 달라지는 선택</p></div>
+      <div class="card red"><span class="tag stop">실행 전 승인</span><p class="small">운영·결제·발송·배포·민감정보·복구 곤란 삭제</p></div>
+    </div>
+    <div class="callout stop"><b>공통 오해:</b> 작업 폴더 밖에 둔 파일이 자동으로 접근 차단되는 것은 아닙니다. Git도 DB·결제·메일·배포 같은 외부 상태를 되돌리지 못합니다.</div>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>3 / 앞 15</span></div>
+</section>
+
+<section class="page" id="p4">
+  <div class="page-head"><span>ACTION 01 · 만들기 전</span><span>아는 조건과 모르는 결정을 분리</span></div>
+  <div class="page-body">
+    <div class="eyebrow">Before building</div>
+    <h2>전체 명세는 먼저 주고, 구현은 작게 나누세요</h2>
+    <div class="callout"><span class="tag">이런 상황인가요?</span>무엇을 만들어야 하는지는 알지만, 어떤 선택을 먼저 정해야 하는지 모르겠거나 AI가 제멋대로 방향을 확정합니다.</div>
+
+    <div class="label">지금 할 일 · 결과를 바꾸는 미확정 사항만 질문받기</div>
+    <div class="prompt">목표: [사용자가 실제로 볼 결과]
+이미 정한 것: [요구사항·제약]
+아직 정하지 못한 것: [모르면 그대로 표시]
+완료 조건: [직접 확인할 실행 결과]
+수정 허용 범위: [파일·기능·데이터·외부 동작]
+바로 만들지 말고, 결과·비용·위험을 크게 바꾸는 미정 사항만 추천안과 이유를 붙여 물어봐. 구현은 검증 가능한 작은 단위로 나눠.</div>
+
+    <div class="grid-2">
+      <div class="card green"><h3><span class="tag good">완료 확인</span>좋은 시작의 네 칸</h3><ul class="check"><li>사용자가 관찰할 결과</li><li>이미 확정된 조건과 미확정 결정</li><li>제외 범위와 보존할 동작·데이터</li><li>결과를 판정할 실행 방법</li></ul></div>
+      <div class="card red"><h3><span class="tag stop">여기서 멈춤</span>질문이 일을 대신할 때</h3><ul class="stop-list"><li>오타에도 긴 인터뷰부터 함</li><li>질문 수를 채우려고 허구 선택을 만듦</li><li>사용자 답 없이 고영향 결정을 확정함</li></ul></div>
+    </div>
+
+    <div class="card violet"><h3>나쁜 요청 → 좋은 요청</h3><p><b>나쁨:</b> “예약 기능 예쁘게 만들어줘.”</p><p><b>좋음:</b> “모바일에서 날짜·시간을 고르고 예약 완료 화면까지 확인한다. 결제는 제외한다. 인원 제한과 취소 규칙은 추천안과 함께 먼저 물어봐.”</p></div>
+    <p class="small"><b>왜 필요한가:</b> `요구사항을 한 번에`와 `AI에게 질문시켜라`는 충돌하지 않습니다. 아는 조건은 먼저 주고, 결과를 바꾸는 미확정 결정만 질문받는 것입니다.</p>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>4 / 앞 15</span></div>
+</section>
+
+<section class="page" id="p5">
+  <div class="page-head"><span>ACTION 02 · 체크포인트</span><span>원본·사용자 변경·외부 상태</span></div>
+  <div class="page-body">
+    <div class="eyebrow">Protect the state</div>
+    <h2>“다 커밋”보다 먼저, 무엇이 복구되는지 보세요</h2>
+    <div class="callout"><span class="tag">이런 상황인가요?</span>새 프로젝트에서 Git을 만들려 하거나, AI가 여러 파일을 바꿨고 원래 상태로 돌아갈 수 있는지 불안합니다.</div>
+
+    <div class="label">지금 할 일 · 쓰기 전에 현재 경계 확인</div>
+    <div class="prompt">아직 Git 생성·커밋·원복은 하지 마.
+현재 경로, 상위 저장소, 추적·미추적·ignored 파일, .gitignore, 비밀, 내 기존 변경을 읽기 전용으로 확인해.
+이번 작업에 포함할 정확한 파일과 Git으로 복구되지 않는 외부 상태를 먼저 보고해.</div>
+
+    <div class="flow four">
+      <div class="node"><b>작업 파일</b><br>이번 변경과 기존 변경 분리</div>
+      <div class="node"><b>Git</b><br>검토해 기록한 파일 이력</div>
+      <div class="node warn"><b>미추적·ignored</b><br>자동 보호 아님</div>
+      <div class="node stop"><b>외부 상태</b><br>DB·메일·결제·배포</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card green"><h3><span class="tag good">완료 확인</span>체크포인트가 생긴 증거</h3><ul class="check"><li>저장소 루트와 포함 범위가 보임</li><li>이번 작업 파일만 stage됨</li><li>비밀 포함 여부가 확인됨</li><li>외부 상태용 별도 백업·롤백이 있음</li></ul></div>
+      <div class="card red"><h3><span class="tag stop">여기서 멈춤</span>일괄 명령 전</h3><ul class="stop-list"><li><span class="mono">reset/checkout/clean</span> 대상이 불명확</li><li>사용자 미커밋 변경이 섞임</li><li>DB·발송·배포를 Git으로 되돌리려 함</li></ul></div>
+    </div>
+
+    <p class="small"><b>왜 필요한가:</b> Claude 체크포인트와 Git은 유용하지만 범위가 다릅니다. 폴더 밖 원본은 백업 습관에는 도움이 되지만, permissions·sandbox 검증 없이 물리적 접근 차단이라고 말할 수 없습니다.</p>
+  </div>
+  <div class="page-foot"><span class="quick-nav"><a href="#p2">시작</a><a href="#p3">상황 찾기</a><a href="#p13">긴급복구</a></span><span>5 / 앞 15</span></div>
+</section>
+
+<section class="appendix-cover" id="appendix">
+  <div class="eyebrow">APPENDIX · v2.3.7 동기화 원문</div>
+  <h2>가드팩을 깊게 볼 때<br>여기서부터 읽으세요</h2>
+  <div class="card dark">
+    이 부록은 요약이 아닙니다. 같은 버전의 <b>README와 00~09 원문</b>을 그대로 실었습니다.
+  </div>
+  <div class="scope-grid">
+    <div class="card green">
+      <h3>확인할 수 있는 것</h3>
+      <p class="small">설치 범위, 글로벌 코어, 상황별 플레이북, 행동 평가 규격과 공개 주장 한계</p>
+    </div>
+    <div class="card amber">
+      <h3>PDF만으로 할 수 없는 것</h3>
+      <p class="small">설치기·롤백·plugin·fixture·실행기를 복원하거나 실제 모델 효과를 증명하는 일</p>
+    </div>
+  </div>
+  <div class="callout stop"><b>설치는 동봉된 같은 버전의 가드팩 폴더에서만 진행하세요.</b> PDF의 코드를 복사해 파일을 재구성하지 말고, 먼저 <span class="mono">docs/QUICKSTART.md</span>와 설치기의 읽기 전용 PLAN을 확인합니다.</div>
+  <div class="callout warn"><b>현재 행동 증거 경계</b> — T01~T30은 평가 규격입니다. 채점된 실제 반복 실행 기록이 없는 상태에서는 구조 테스트 통과를 행동 개선으로 바꾸어 말하지 않습니다.</div>
+  <p class="micro mono">APPENDIX_SOURCE_SET_SHA256 · {{APPENDIX_SOURCE_SET_SHA256}}</p>
+</section>
+
+<!-- APPENDIX_FILES -->
+</body>
+</html>

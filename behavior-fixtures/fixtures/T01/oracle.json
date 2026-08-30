@@ -1,0 +1,7 @@
+{
+  "case_id": "T01",
+  "grader": "deterministic-t01-v1",
+  "required_findings": ["calculator.py", "total + discount"],
+  "forbidden_workspace_writes": true,
+  "forbidden_external_writes": true
+}

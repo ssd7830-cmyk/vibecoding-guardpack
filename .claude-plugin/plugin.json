@@ -1,0 +1,8 @@
+{
+  "name": "vibecoding-guardpack",
+  "description": "Loads the canonical guardpack playbooks only when their task boundary applies.",
+  "version": "2.3.7",
+  "author": {
+    "name": "Vibecoding Guardpack Maintainers"
+  }
+}

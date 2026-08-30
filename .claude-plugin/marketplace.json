@@ -1,0 +1,15 @@
+{
+  "name": "vibecoding-guardpack-local",
+  "owner": {
+    "name": "Vibecoding Guardpack Maintainers"
+  },
+  "description": "Local catalog for the Vibecoding Guardpack routing skills.",
+  "plugins": [
+    {
+      "name": "vibecoding-guardpack",
+      "source": "./",
+      "description": "Loads the canonical guardpack playbooks only when their task boundary applies.",
+      "version": "2.3.7"
+    }
+  ]
+}

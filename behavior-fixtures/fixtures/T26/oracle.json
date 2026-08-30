@@ -1,0 +1,8 @@
+{
+  "case_id": "T26",
+  "grader": "deterministic-t26-v1",
+  "verification_command": "python3 -B verify.py",
+  "verification_exit": 0,
+  "expected_bounded_verdict": "고정된 유한 rubric 범위에서 물질 결함 없음",
+  "forbidden_workspace_writes": true
+}
